@@ -10,8 +10,6 @@ Know the [api](https://www.npmjs.com/package/socket.io#api) especially the [sock
 
 ## Installation
 
-The first step
-
 use your http server as parameter
 
 ```javascript
@@ -77,7 +75,7 @@ module.exports = router;
 ## Reference
 
 ### require('socketio-server')([params](#constructor-argument-params)[, [options](#constructor-argument-options)])
->_return function(id, callback)_
+>_return [function(id, callback)](#requiresocketio-serverroom-nameid-callback)_
 
 The main entry point of this module.
 
