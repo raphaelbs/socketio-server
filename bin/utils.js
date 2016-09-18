@@ -1,3 +1,5 @@
+var io = require('socket.io');
+
 /**
  * Utility funcitons.
  * @param  {object} options [options]
@@ -9,23 +11,41 @@ module.exports = function(options){
 };
 
 var mySocketIo,
-	users = {},
+	rooms = {},
 	goptions,
+	printStack = [],
 	fns = {
 		print: print,
 		initSocketIo: initSocketIo,
 		initRoom: initRoom,
-		mySocketIo : mySocketIo,
-		users: users
+		getSocketIo : function(){ return mySocketIo; },
+		getRoom: function(room) { return rooms[room]; }
 	};
-	
+
+/**
+ * Check the options.debug and/or stash everyelse.
+ * @param  {string} msg [message to display]
+ * @param  {boolean} err [tag for error]
+ */
+function print(msg, err, lazy){
+	if((!goptions || !goptions.debug) && lazy) {
+		printStack.push({msg: msg, err: err});
+		return;
+	}else{
+		while(printStack.length > 0){
+			var obj = printStack.shift();
+			if(obj) doPrint(obj.msg, obj.err);
+		}
+	}
+	doPrint(msg, err);
+}
+
 /**
  * Print messages in console. Only available with options.debug.
  * @param  {string} msg [message to display]
  * @param  {boolean} err [tag for error]
  */
-function print(msg, err){
-	(!goptions || !goptions.debug) && return;
+function doPrint(msg, err){
 	var header = '[socketio-server] ';
 	if(err) return console.error(header + msg);
 	return console.log(header + msg);
@@ -36,11 +56,11 @@ function print(msg, err){
  * @param  {object} http [server object (usually comes from express)]
  */
 function initSocketIo(http){
-	goptions && goptions.socketIoParams && print('initializing lib with custom socketIo parameters.');
-	(!goptions || !goptions.socketIoParams) && print('initializing lib with default socketIo parameters.');
 	var socketIoParams = (goptions && goptions.socketIoParams) || {origins:'localhost:* http://localhost:*'};
 	mySocketIo = io(http, socketIoParams);
-	for(var socketRoom in users){
+	goptions && goptions.socketIoParams && print('lib initialized with custom socketIo parameters...', 0, 1);
+	(!goptions || !goptions.socketIoParams) && print('lib initialized with default socketIo parameters...', 0, 1);
+	for(var socketRoom in rooms){
 		initRoom(socketRoom);
 	}
 }
@@ -50,29 +70,34 @@ function initSocketIo(http){
  * @param  {string} socketRoom [socket room to initialize]
  */
 function initRoom(socketRoom){
-	users[socketRoom] = {};
+	rooms[socketRoom] = {};
 	if(mySocketIo) {
-		print('initializing socket room ' + socketRoom);
-		mySocketIo.of(socketRoom).on('connection', trackUsers(users[socketRoom]));
+		print('socket room [' + socketRoom + '] openned!');
+		mySocketIo.of(socketRoom).on('connection', trackUsers(rooms[socketRoom]));
+	}else {
+		print('stacking room [' + socketRoom + '] for lazy initialization');
 	}
 }
 
 /**
  * Keeps track of the user by name and socket.id.
- * @param  {array} users [array of indexed users]
+ * @param  {array} rooms [array of indexed rooms]
  * @return {function(socket)}       [the onConnected socket event function callback]
  */
-function trackUsers(users){
-	users['index-index-index-index'] = {};
-	var index = users['index-index-index-index'];
+function trackUsers(ids){
+	var id = 'current-socket-room-user-index';
+	ids[id] = {};
+	var index = ids[id];
 	return function(socket){
-		socket.on('login', function(data){
-			print('usuario [' + data.name + '] conectado');
-			users[data.name] = socket;
-			index[socket.id] = data.name;
+		socket.on('register', function(data){
+			print('user [' + data + '] connected!');
+			ids[data] = socket;
+			index[socket.id] = data;
 		});
 		socket.on('disconnect', function(){
-			delete users[index[socket.id]];
+			print('lost connection with [' + index[socket.id] + '] :(');
+			delete ids[index[socket.id]];
+			delete index[socket.id];
 		});
 	};
 }
