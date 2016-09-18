@@ -1,23 +1,23 @@
 {
-	"name": "socketio-server",
-	"version": "1.0.0",
-	"description": "A tool to easily create and use SocketIO-Rooms inside nodejs-express-routes.",
-	"main": "socketio-server.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [
-		"socketio",
-		"express",
-		"routes"
-	],
-	"author": "Raphael Brandão",
-	"license": "MIT",
-	"dependencies": {
-		"socket.io": "^1.4.8"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/raphaelbs/socketio-server.git"
-	}
+  "name": "socketio-server",
+  "version": "1.0.1",
+  "description": "A tool to easily create and use SocketIO-Rooms inside nodejs-express-routes.",
+  "main": "socketio-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "socketio",
+    "express",
+    "routes"
+  ],
+  "author": "Raphael Brandão",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^1.4.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphaelbs/socketio-server.git"
+  }
 }
