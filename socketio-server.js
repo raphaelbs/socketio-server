@@ -13,7 +13,7 @@ module.exports = function(param, options){
 	if(typeof param === 'object') return utils.initSocketIo(param);
 
 	if(!param) param = '/';
-	if(typeof param === 'string') utils.initRoom(param);
+	if(typeof param === 'string') utils.initRoom(param, options);
 
 	return function(id, callback){
 		if(!utils.getSocketIo()) return callback('socket desconected! Socketio-server was initialized?');

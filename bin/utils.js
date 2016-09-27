@@ -11,6 +11,7 @@ module.exports = function(options){
 };
 
 var mySocketIo,
+	events = {},
 	rooms = {},
 	goptions,
 	printStack = [],
@@ -69,11 +70,12 @@ function initSocketIo(http){
  * socketio-server room initializer.
  * @param  {string} socketRoom [socket room to initialize]
  */
-function initRoom(socketRoom){
+function initRoom(socketRoom, eventsParams){
 	rooms[socketRoom] = {};
+	if(eventsParams) events[socketRoom] = eventsParams;
 	if(mySocketIo) {
 		print('socket room [' + socketRoom + '] openned!');
-		mySocketIo.of(socketRoom).on('connection', trackUsers(rooms[socketRoom]));
+		mySocketIo.of(socketRoom).on('connection', trackUsers(rooms[socketRoom], events[socketRoom]));
 	}else {
 		print('stacking room [' + socketRoom + '] for lazy initialization');
 	}
@@ -84,12 +86,14 @@ function initRoom(socketRoom){
  * @param  {array} rooms [array of indexed rooms]
  * @return {function(socket)}       [the onConnected socket event function callback]
  */
-function trackUsers(ids){
+function trackUsers(ids, events){
+	console.log(events);
 	var id = 'current-socket-room-user-index';
 	ids[id] = {};
 	var index = ids[id];
 	return function(socket){
 		socket.on('register', function(data){
+			events && events['connect'] && events['connect'](data, socket);
 			print('user [' + data + '] connected!');
 			ids[data] = socket;
 			index[socket.id] = data;
