@@ -87,7 +87,6 @@ function initRoom(socketRoom, eventsParams){
  * @return {function(socket)}       [the onConnected socket event function callback]
  */
 function trackUsers(ids, events){
-	console.log(events);
 	var id = 'current-socket-room-user-index';
 	ids[id] = {};
 	var index = ids[id];
