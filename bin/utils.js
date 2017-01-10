@@ -91,6 +91,8 @@ function trackUsers(ids, events){
 	ids[id] = {};
 	var index = ids[id];
 	return function(socket){
+		var interval = (goptions && goptions.socketIoParams && goptions.socketIoParams.pingInterval) || 25*1000;
+
 		socket.on('register', function(data){
 			events && events['connect'] && events['connect'](data, socket);
 			print('user [' + data + '] connected!');
@@ -108,12 +110,12 @@ function trackUsers(ids, events){
 			print('ping to [' + index[socket.id] + ']');
 	        socket.emit('ping');
 	    }
-		setTimeout(sendPing, 25*1000);
+		setTimeout(sendPing, interval);
 
-		// mannual heartbeat - listen pong
+		// manual heartbeat - listen pong
 		socket.on('pong', function(data) {
 			print('pong from [' + index[socket.id] + ']');
-	        setTimeout(sendPing, 25*1000);
+	        setTimeout(sendPing, interval);
 	    });
 	};
 }
