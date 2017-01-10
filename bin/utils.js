@@ -57,7 +57,7 @@ function doPrint(msg, err){
  * @param  {object} http [server object (usually comes from express)]
  */
 function initSocketIo(http){
-	var socketIoParams = (goptions && goptions.socketIoParams) || {origins:'localhost:* http://localhost:*'};
+	var socketIoParams = (goptions && goptions.socketIoParams) || {origins:'localhost:* http://localhost:*', pingInterval: 25*1000};
 	mySocketIo = io(http, socketIoParams);
 	goptions && goptions.socketIoParams && print('lib initialized with custom socketIo parameters...', 0, 1);
 	(!goptions || !goptions.socketIoParams) && print('lib initialized with default socketIo parameters...', 0, 1);
@@ -102,5 +102,18 @@ function trackUsers(ids, events){
 			delete ids[index[socket.id]];
 			delete index[socket.id];
 		});
+
+		// mannual heartbeat - emit ping
+		function sendPing() {
+			print('ping to [' + index[socket.id] + ']');
+	        socket.emit('ping');
+	    }
+		setTimeout(sendPing, 25*1000);
+
+		// mannual heartbeat - listen pong
+		socket.on('pong', function(data) {
+			print('pong from [' + index[socket.id] + ']');
+	        setTimeout(sendPing, 25*1000);
+	    });
 	};
 }
