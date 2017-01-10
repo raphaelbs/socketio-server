@@ -1,6 +1,6 @@
 {
   "name": "socketio-server",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A tool to easily create and use SocketIO-Rooms inside nodejs-express-routes.",
   "main": "socketio-server.js",
   "scripts": {
