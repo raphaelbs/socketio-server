@@ -92,17 +92,21 @@ function trackUsers(ids, events){
 	var index = ids[id];
 	return function(socket){
 		var interval = (goptions && goptions.socketIoParams && goptions.socketIoParams.pingInterval) || 25*1000;
+		var registered = false;
 
 		socket.on('register', function(data){
-			events && events['connect'] && events['connect'](data, socket);
-			print('user [' + data + '] connected!');
 			ids[data] = socket;
 			index[socket.id] = data;
+			if(registered) return;
+			print('user [' + data + '] connected!');
+			events && events['connect'] && events['connect'](data, socket);
+			registered = true;
 		});
 		socket.on('disconnect', function(){
 			print('lost connection with [' + index[socket.id] + '] :(');
 			delete ids[index[socket.id]];
 			delete index[socket.id];
+			registered = false;
 		});
 
 		// mannual heartbeat - emit ping
