@@ -66,16 +66,12 @@ module.exports = router;
 
 ```
 
----
-
 ## Reference
 
 ### require('socketio-server')([params](#constructor-argument-params)[, [options](#constructor-argument-options)])
 >_return [function(id, callback)](#requiresocketio-serverroom-nameid-callback)_
 
 The main entry point of this module.
-
-***
 
 #### Constructor argument: params
 > type _string_ or _object_
@@ -101,8 +97,6 @@ key | description | type | default
 --- | --- | --- | ---
 *debug* | Enable verbosity for debuggin (very handy) | boolean | false
 
-***
-
 ### require('socketio-server')('room name')(id, callback)
 
 This function is the goal of the module. Within this function, you can specifically get the socket of the desired ID defined in your client-side.
@@ -117,21 +111,15 @@ The identifier of the socket that you want to retrieve.
 
 This callback function exposes a [socket](https://www.npmjs.com/package/socket.io#socket) object relative to the identifier above.
 
----
-
 ## Dependencies
 
 socket.io
-
----
 
 ## Contact-me
 * [Email](mailto:raphael.b.souza@hotmail.com)
 * [Facebook](https://facebook.com/raphaelbs)
 * [GitHub](https://github.com/raphaelbs)
 * [NPM](https://npmjs.com/~raphaelbs)
-
----
 
 ## License
 
