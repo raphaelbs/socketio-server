@@ -1,12 +1,10 @@
 # socketio-server
-A tool to easily create and use SocketIO-Rooms inside nodejs-express-routes.
+A tool to easily create and use SocketIO rooms inside nodejs routes.
 
 #### Please Note
 
-This package was built upon the great [socket.io](https://www.npmjs.com/package/socket.io).
+This package was built upon [socket.io](https://www.npmjs.com/package/socket.io).
 Know the [api](https://www.npmjs.com/package/socket.io#api) especially the [socket](https://www.npmjs.com/package/socket.io#socket) section to get the best out of it.
-
----
 
 ## Installation
 
@@ -25,11 +23,9 @@ var server = http.createServer(app);
 require('socketio-server')(server, {debug: true});
 ```
 
----
-
 ## Usage
 
-In the client of your application, the first step is to emit an event named **_register_** with an identifier that you keep track. In the example bellow I've used my username as the identifier:
+In the client application, the first step is to emit an event named **_register_** with an identifier that you keep track. In the example bellow I've used my username as the identifier:
 
 ```javascript
 // this can be found laying in some Angular directive frontend application
@@ -47,7 +43,7 @@ socket.on('connect', function(socket){
 });
 ```
 
-And inside the Node server, the socket of the registered identifier can be retrieved at any time using the  
+Inside the NodeJS server, the registered socket can be retrieved at any time using the identifier
 
 ```javascript
 var express = require('express');
